@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -12,27 +12,42 @@ import { Button } from '../components/Button'
 import { SkillCard } from '../components/SkillCard'
 
 export function Home() {
-  const [newSkill, setNewSkill] = useState('')
-  const [mySkills, setMySkills] = useState([])
+  const [ newSkill, setNewSkill ] = useState('')
+  const [ mySkills, setMySkills ] = useState([])
+  const [ gretting, setGretting ]  = useState('')
 
   function handleAddNewSkill() {
     setMySkills(oldState => [...oldState, newSkill])
   }
 
+
+  useEffect(() => {
+    const currentHour = new Date().getHours()
+    
+    if(currentHour < 12) {
+      setGretting('Bom dia')
+    } else if (currentHour >= 12 && currentHour < 18) {
+      setGretting('Boa tarde')
+    } else {
+      setGretting('Boa noite')
+    }
+  },[])
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome, Vitor</Text>
+      
+      <Text style={styles.title}>{gretting}, Vitor</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="New skill"
+        placeholder="Nova habilidade"
         placeholderTextColor="#555"
         onChangeText={setNewSkill}
       />
 
       <Button onPress={handleAddNewSkill} />
 
-      <Text style={[styles.title, { marginVertical: 50 }]}>My Skills</Text>
+      <Text style={[styles.title, { marginVertical: 50 }]}>Suas Habilidades:</Text>
 
       <FlatList 
         data={mySkills}
@@ -64,5 +79,5 @@ const styles = StyleSheet.create({
     padding: Platform.OS === 'ios' ? 15 : 10,
     marginTop: 30,
     borderRadius: 5,
-  },
+  }
 })
